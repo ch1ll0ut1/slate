@@ -23,7 +23,7 @@ const OVERFLOWS = [
 function findScrollContainer(el) {
   const window = getWindow(el)
   let parent = el.parentNode
-  let scroller = window
+  let scroller
 
   while (!scroller) {
     if (!parent.parentNode) break
@@ -37,6 +37,8 @@ function findScrollContainer(el) {
 
     parent = parent.parentNode
   }
+
+  if (!scroller) return window
 
   return scroller
 }
@@ -78,19 +80,19 @@ function scrollToSelection(selection) {
   const top = (backward ? rect.top : rect.bottom) + yOffset
   const left = (backward ? rect.left : rect.right) + xOffset
 
-  const x = left < yOffset || innerWidth + xOffset < left
+  const x = left < yOffset || (width + xOffset) < left
     ? left - width / 2
     : xOffset
 
-  const y = top < yOffset || height + yOffset < top
+  const y = top < yOffset || (height + yOffset) < top
     ? top - height / 2
     : yOffset
 
   if (isWindow) {
     window.scrollTo(x, y)
   } else {
-    scroller.scrollTop = scroller.scrollTop + y
-    scroller.scrollLeft = scroller.scrollLeft + x
+    scroller.scrollTop = y
+    scroller.scrollLeft = x
   }
 }
 
